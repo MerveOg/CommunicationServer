@@ -12,11 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import java.util.ArrayList;
 
 /**
  *
@@ -58,7 +53,30 @@ public class DataConnection {
 
     }
 
-    public ArrayList<String> getProjectTeam(String projectName) {
+//    public ArrayList<String> getProjectTeam(String projectName) {
+//        ArrayList<String> projectTeam = new ArrayList<>();
+//        String query = "SELECT team FROM Project WHERE name = ?";
+//        try {
+//            preparedStatement = con.prepareStatement(query);
+//            preparedStatement.setString(1, projectName);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            if (resultSet.next()) {
+//                String team = resultSet.getString("team");
+//                // Split team members with ","
+//                String[] teamMembers = team.split(",");
+//                // Add each team member to list. 
+//                for (String member : teamMembers) {
+//                    projectTeam.add(member.trim());
+//                }
+//            } else {
+//                System.out.println("Project " + projectName + " does not exist.");
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return projectTeam;
+//    }
+    public ArrayList<String> getProjectTeam(String projectName, String excludedName) {
         ArrayList<String> projectTeam = new ArrayList<>();
         String query = "SELECT team FROM Project WHERE name = ?";
         try {
@@ -69,9 +87,12 @@ public class DataConnection {
                 String team = resultSet.getString("team");
                 // Split team members with ","
                 String[] teamMembers = team.split(",");
-                // Add each team member to list. 
+                // Add each team member to list except the excluded one
                 for (String member : teamMembers) {
-                    projectTeam.add(member.trim());
+                    String trimmedMember = member.trim();
+                    if (!trimmedMember.equals(excludedName)) {
+                        projectTeam.add(trimmedMember);
+                    }
                 }
             } else {
                 System.out.println("Project " + projectName + " does not exist.");
@@ -233,22 +254,6 @@ public class DataConnection {
         statement.executeUpdate(sorgu);
     }
 
-//Girilen biigilere göre hasta bilgilerini hasta database'ine aktaracak metodu yazdım.
-    public void addPatient(String name, String email, String password, String gender, int age, int id) throws SQLException {
-        statement = con.createStatement();
-
-        String sorgu = "Insert Into patients(name,email,password,gender,age,id)VALUES ('" + name + "','" + email + "','" + password + "','" + gender + "','" + age + "','" + id + "')";
-        statement.executeUpdate(sorgu);
-    }
-
-//Doktorun girdiği bilgilere göre reçete bilgilerini reçete database'ine aktardım.
-    public void prescribe(String name, String email, String medicine, String barcod, String daily, String weekly, String time, String hungry, String doctor) throws SQLException {
-        statement = con.createStatement();
-
-        String sorgu = "Insert Into prescribe(name,email,medicine,barcod,daily,weekly,time,hungry,doctor)VALUES ('" + name + "','" + email + "','" + medicine + "','" + barcod + "','" + daily + "','" + weekly + "','" + time + "','" + hungry + "','" + doctor + "')";
-        statement.executeUpdate(sorgu);
-    }
-
 //doktor giriş yapacakken gireceği email ve passwordu doğru ise (önceden kayıt yapmışsa ve database'de o bilgilere karşılık
     //doktor bulunuyorsa) giriş yapabilecek.
     public boolean controlLogIn(String username, String password) {
@@ -265,30 +270,11 @@ public class DataConnection {
         return false;
     }
 
-//hasta giriş yapacakken gireceği email ve passwordu doğru ise (önceden kayıt yapmışsa ve database'de o bilgilere karşılık
-    //hasta bulunuyorsa) giriş yapabilecek.
-    public boolean controlEnterPatient(String email, String password) {
-        String sorgu = "Select * From patients where email = ? and password = ?";
+    public boolean isThereThisProjectName(String projectName) {
+        String sorgu = "Select * from Project where name = ?";
         try {
             preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
-            ResultSet executeQuery = preparedStatement.executeQuery();
-            return executeQuery.next();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-//Girilen hasta bilgileri databasede bulunuyorsa doktorun randevu oluşturabilmesi için
-    //bu metodu oluşturdum.
-
-    public boolean controlPatientForPrescribe(String name, String email) {
-        String sorgu = "Select * From patients where email = ? and name =?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, name);
+            preparedStatement.setString(1, projectName);
 
             ResultSet executeQuery = preparedStatement.executeQuery();
             return executeQuery.next();
@@ -297,27 +283,7 @@ public class DataConnection {
         }
         return false;
     }
-//randevu bilgilerini bir arraylistte topladım ve doktor classında bu bilgileri tabloya aktardım.
 
-//sisteme giriş yapan hastanın email adresi yardımıyla randevu bilgilerini çektim.
-//verilen emaile ve doctor id'sine sahip reçete bilgisini silen metodu yazdım.
-    public void deletePrescribe(String email, int id) {
-        String sorgu = "Delete From prescribe Where email = ? and doctor =?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, email);
-            preparedStatement.setInt(2, id);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    //doktor hesap oluşturmaya çalışırken girdiği (unique olması gereken) id ya da email'i başka 
-    //bir kişide bulunup bulunmadığını kontrol eden boolean değer döndüren method yazdım.
-    //Başka kişide bulunuyorsa o kişinin hesap oluşturabilmesi için yeni email ya da şifre girmesi gerekecek
-    //Enter class'ında kontrolü yaptım.
     public boolean isThereThisUser(String username, String password) {
         String sorgu = "Select * from UserInfos where username = ? or password =? ";
         try {
@@ -333,93 +299,6 @@ public class DataConnection {
         return false;
     }
 
-    //hasta hesap oluşturmaya çalışırken girdiği (unique olması gereken) id ya da email'i başka 
-    //bir kişide bulunup bulunmadığını kontrol eden boolean değer döndüren method yazdım.
-    //Başka kişide bulunuyorsa o kişinin hesap oluşturabilmesi için yeni email ya da şifre girmesi gerekecek
-    //Enter class'ında kontrolü yaptım.
-    public boolean isThereThisPatient(String email, int id) {
-        String sorgu = "Select * from patients where email = ? or id =?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, email);
-            preparedStatement.setInt(2, id);
-
-            ResultSet executeQuery = preparedStatement.executeQuery();
-            return executeQuery.next();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-//hasta şifresini update etmek istediği zaman gireceği email hastanın database bilgisinde
-    //bulunuyorsa güncelleme yapabilmesini sağlayan metodu yazmak istedim.
-
-    public boolean isThereThisEmailOnPatientForUpdatePass(String email) {
-        String sorgu = "Select * from patients where email = ?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, email);
-
-            ResultSet executeQuery = preparedStatement.executeQuery();
-            return executeQuery.next();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-//doktor şifresini update etmek istediği zaman gireceği email doktorun database bilgisinde
-    //bulunuyorsa güncelleme yapabilmesini sağlayan metodu yazmak istedim.
-
-    public boolean isThereThisEmailOnDoctorsForUpdatePass(String email) {
-        String sorgu = "Select * from doctors where email = ?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, email);
-
-            ResultSet executeQuery = preparedStatement.executeQuery();
-            return executeQuery.next();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-//doktorun şifresini güncelleyebilmesini sağlayan metodu yazdım.
-
-    public void updatePasswordDoctor(String email, String newPassword) {
-        String sorgu = "Update doctors set password = ? where email =?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, newPassword);
-            preparedStatement.setString(2, email);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("işlem basarısız");
-        }
-
-    }
-
-//hastanın şifresini güncelleyebilmesini sağlayan metodu yazdım.
-    public void updatePasswordPatient(String email, String newPassword) {
-        String sorgu = "Update patients set password = ? where email =?";
-        try {
-            preparedStatement = con.prepareStatement(sorgu);
-            preparedStatement.setString(1, newPassword);
-            preparedStatement.setString(2, email);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("işlem basarısız");
-        }
-
-    }
-
-    //Enter tuşuna bastıktan sonra doktor bilgilerinin ekranda gözükmesi 
-    //için bu metodu oluşturdum.
-    //Enter tuşuna bastıktan sonra hasta bilgilerinin ekranda gözükmesi 
-    //için bu metodu oluşturdum.
     public Connection getCon() {
         return con;
     }

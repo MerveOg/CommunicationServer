@@ -1,9 +1,7 @@
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,17 +9,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.util.ArrayList;
+
 import java.util.Base64;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
+
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 /*
@@ -29,7 +21,7 @@ import javax.swing.SwingUtilities;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 /**
- *
+ *x
  * @author merveog
  */
 public class Chat extends javax.swing.JFrame {
@@ -48,7 +40,7 @@ public class Chat extends javax.swing.JFrame {
      */
     public Chat() {
         initComponents();
-        //Merve connectServer();
+        //Merve Og connectServer();
     }
 
     public Chat(String userName, String project, String key) {
@@ -78,7 +70,6 @@ public class Chat extends javax.swing.JFrame {
 
             try {
                 clientSocket = new Socket(ip, port);
-                // String msg = clientSocket.getInetAddress().toString() + " ";
                 String msg = lblUserName.getText() + "," + lblName.getText() + ", ";
 
                 sInput = new DataInputStream(clientSocket.getInputStream());
@@ -127,7 +118,6 @@ public class Chat extends javax.swing.JFrame {
                     for (String part : parts) {
                         System.out.println(part);
                     }
-                    //System.out.println(message);
                     String sender = parts[0];
                     String projectName = parts[1];
                     String userName = parts[2];
@@ -142,7 +132,6 @@ public class Chat extends javax.swing.JFrame {
                 }
 
                 if (message.startsWith("a,")) {
-                    // "a," ile başlayan mesajı al ve virgüllerle ayır
                     System.out.println("MESAJIM: " + message);
                     String[] clients = message.substring(2).split(",");
                     System.out.println("MESAJIM2: " + message);
@@ -176,10 +165,8 @@ public class Chat extends javax.swing.JFrame {
                     String fileContentBase64 = parts[2];
 
                     try {
-                        // Base64 formatındaki dosyayı byte dizisine dönüştürün
                         byte[] fileContent = Base64.getDecoder().decode(fileContentBase64);
 
-                        // receiveFile metodunu çağırarak dosyayı listeye ekle
                         receiveFile(fileName, fileContent);
                     } catch (IllegalArgumentException ex) {
                         System.out.println("Base64 kodu geçersiz: " + ex.getMessage());
@@ -191,7 +178,6 @@ public class Chat extends javax.swing.JFrame {
                     System.out.println("Socket closed");
                     break;
                 }
-                // Logger.getLogger(ClientForm.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
@@ -199,12 +185,10 @@ public class Chat extends javax.swing.JFrame {
 
     private void receiveFile(String fileName, byte[] fileContent) {
         try {
-            // Byte dizisini dosyaya yaz
             FileOutputStream fos = new FileOutputStream(fileName);
             fos.write(fileContent);
             fos.close();
 
-            // Dosyayı göstermek için uygun olan JList'e (txtAGc) JLabel'i ekle
             SwingUtilities.invokeLater(() -> {
 
                 list.addElement(fileName);
@@ -267,7 +251,6 @@ public class Chat extends javax.swing.JFrame {
         txtTextInputGc = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtTextInputPrivChat = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtAGc = new javax.swing.JList<>();
@@ -296,7 +279,7 @@ public class Chat extends javax.swing.JFrame {
         lblKey.setFont(new java.awt.Font("Helvetica Neue", 0, 11)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        jLabel5.setText("Active Users");
+        jLabel5.setText("Project Team");
 
         listOfTeam.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -377,13 +360,6 @@ public class Chat extends javax.swing.JFrame {
 
         txtTextInputPrivChat.setText("Write something here... ");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/back (1).png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jButton2.setText("jButton2");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -430,20 +406,9 @@ public class Chat extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane4)
-                                .addGap(34, 34, 34)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(354, 354, 354))
-                            .addComponent(jScrollPane2)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                            .addComponent(jLabel6)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -452,15 +417,17 @@ public class Chat extends javax.swing.JFrame {
                                 .addComponent(jButton2))
                             .addComponent(txtTextInputGc, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTextInputPrivChat, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton3)
-                                .addGap(12, 12, 12)))))
-                .addGap(32, 32, 32))
+                                .addGap(44, 44, 44))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTextInputPrivChat, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7))
+                                .addGap(0, 42, Short.MAX_VALUE))))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -469,9 +436,7 @@ public class Chat extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
@@ -518,12 +483,6 @@ public class Chat extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTextInputGcMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        User user = new User();
-        user.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         if (clientSocket == null || clientSocket.isClosed()) {
@@ -531,31 +490,28 @@ public class Chat extends javax.swing.JFrame {
             return;
         }
 
-        //String message = "Client: " + txtTextInputGc.getText();
         String message = "Gc" + lblUserName.getText() + "," + lblName.getText() + ":" + txtTextInputGc.getText() + " x";
         SendMessage(message.getBytes());
     }//GEN-LAST:event_jButton2ActionPerformed
-
-// Dosya geldiğinde bu fonksiyon çağrılacak
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if (clientSocket == null || clientSocket.isClosed()) {
             System.out.println("First connect to server! ");
             return;
         }
+        if (!listOfTeam.isSelectionEmpty() && listOfTeam.getSelectedIndex() != -1) {
+            //  System.out.println("Bir öğe seçildi: " + listOfTeam.getSelectedValue());
+            String message = "c" + lblUserName.getText() + "," + lblName.getText() + "," + listOfTeam.getSelectedValue().toString() + "," + txtTextInputPrivChat.getText() + ",";
 
-        //String message = "Client: " + txtTextInputGc.getText();
-        String message = "c" + lblUserName.getText() + "," + lblName.getText() + "," + listOfTeam.getSelectedValue().toString() + "," + txtTextInputPrivChat.getText() + ",";
+            SendMessage(message.getBytes());
+        } else {
+            System.out.println("Hiçbir öğe seçilmedi veya liste boş.");
+        }
 
-        // String message = jLabel2.getText() + ":" + txtTextInputPrivChat.getText();
-        SendMessage(message.getBytes());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        //disconnectServer("Server connection ended.");
-//        activeClients.removeElement(lblUserName.getText());
-//        int indexToRemove = activeClients.indexOf(lblUserName.getText());
-//        jList1.remove(indexToRemove);
+
     }//GEN-LAST:event_formWindowClosed
 
     private void btnSendFileGcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendFileGcActionPerformed
@@ -568,26 +524,21 @@ public class Chat extends javax.swing.JFrame {
             File fileToSend = fileChooser.getSelectedFile();
 
             try {
-                // Dosyayı oku
                 FileInputStream fis = new FileInputStream(fileToSend);
                 byte[] fileContent = new byte[(int) fileToSend.length()];
                 fis.read(fileContent);
                 fis.close();
 
-                // Dosya adını ve içeriğini birleştirerek mesaj oluştur
                 String fileName = fileToSend.getName();
                 String fileContentBase64 = new String(fileContent, "UTF-8");
                 String message = "File:" + fileName + ":" + fileContentBase64;
 
-                // Mesajı sunucuya gönder
                 SendMessage(message.getBytes());
             } catch (IOException ex) {
                 System.out.println("Dosya okunurken bir hata oluştu: " + ex.getMessage());
             }
         }    }//GEN-LAST:event_btnSendFileGcActionPerformed
 
-// Listen fonksiyonu içinde dosya geldiğinde bu fonksiyon çağrılır
-// Örneğin: receiveFile("encodedFileName", "encodedFileContent");
     private void disconnectServer(String disconnectMessage) {
         try {
             if (clientSocket != null && !clientSocket.isClosed()) {
@@ -596,12 +547,8 @@ public class Chat extends javax.swing.JFrame {
                 }
                 clientSocket.close();
                 System.out.println(disconnectMessage);
-                //activeClients.removeElement(lblUserName.getText());
-
-                //  list.addElement(disconnectMessage);
             }
         } catch (IOException ex) {
-            // Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
     }
@@ -646,7 +593,6 @@ public class Chat extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSendFileGc;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;

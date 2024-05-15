@@ -42,10 +42,10 @@ public class User extends javax.swing.JFrame {
         lblUserName = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listOfProjects = new javax.swing.JList<>();
-        jLabel2 = new javax.swing.JLabel();
+        lblProjectName = new javax.swing.JLabel();
         txtProjectName = new javax.swing.JTextField();
         btnCreateProject = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        lblMyProjects = new javax.swing.JLabel();
         btnJoinProject = new javax.swing.JButton();
         txtProjectKey = new javax.swing.JTextField();
         lblSpecialKey = new javax.swing.JLabel();
@@ -65,8 +65,8 @@ public class User extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listOfProjects);
 
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jLabel2.setText("Project Name:");
+        lblProjectName.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        lblProjectName.setText("Project Name:");
 
         btnCreateProject.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         btnCreateProject.setText("Create Project");
@@ -76,8 +76,8 @@ public class User extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jLabel3.setText("My Projects");
+        lblMyProjects.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        lblMyProjects.setText("My Projects");
 
         btnJoinProject.setText("Join Project");
         btnJoinProject.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +101,7 @@ public class User extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addComponent(lblMyProjects)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnGoProject))
                     .addComponent(lblSpecialKey, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -109,7 +109,7 @@ public class User extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnCreateProject))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(lblProjectName)
                         .addGap(18, 18, 18)
                         .addComponent(txtProjectName))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -131,13 +131,13 @@ public class User extends javax.swing.JFrame {
                 .addComponent(lblUserName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(lblMyProjects)
                     .addComponent(btnGoProject))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(lblProjectName)
                     .addComponent(txtProjectName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnCreateProject)
@@ -166,21 +166,20 @@ public class User extends javax.swing.JFrame {
 
     private void btnCreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateProjectActionPerformed
         listOfProjects.setModel(listModel);
-        lblSpecialKey.setText(UUID.randomUUID().toString());
 
-//        String randomUUID = UUID.randomUUID().toString();
-//String firstSixChars = randomUUID.substring(0, 6);
-//lblSpecialKey.setText(firstSixChars);
         String projectOwner = lblUserName.getText();
-        String projectKey = lblSpecialKey.getText();
         String projectName = txtProjectName.getText();
 
-        if (projectName.isEmpty()) {
+        if (!cn.isThereThisProject(projectName)) {
+            JOptionPane.showMessageDialog(rootPane, "This project name already exist!");
+
+        } else if (projectName.isEmpty()) {
             JOptionPane.showMessageDialog(rootPane, "Project name can't be empty! Please give a name to project");
 
         } else {
             listModel.addElement(txtProjectName.getText());
-
+            lblSpecialKey.setText(UUID.randomUUID().toString());
+            String projectKey = lblSpecialKey.getText();
             try {
                 cn.addProject(projectName, projectKey, projectOwner, projectOwner + ",");
             } catch (SQLException ex) {
@@ -193,7 +192,7 @@ public class User extends javax.swing.JFrame {
     private void btnJoinProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinProjectActionPerformed
         listOfProjects.setModel(listModel);
         boolean isValidKey2 = cn.isThereThisProject("d13231f4-9fda-42c0-aeec-1f9c7479743c");
-        boolean isValidKey = cn.isThereThisProject(txtProjectKey.getText());
+        //boolean isValidKey = cn.isThereThisProject(txtProjectKey.getText());
         System.out.println(isValidKey2);
         if (isValidKey2) {
             cn.updateProjectTeam("d13231f4-9fda-42c0-aeec-1f9c7479743c", lblUserName.getText());
@@ -210,10 +209,9 @@ public class User extends javax.swing.JFrame {
             String projectKey = cn.getProjectKey(projectName, lblUserName.getText());
             Chat chat = new Chat(lblUserName.getText(), projectName, projectKey);
 
-            ArrayList<String> projectTeam = cn.getProjectTeam(projectName);
+            ArrayList<String> projectTeam = cn.getProjectTeam(projectName,lblUserName.getText());
             chat.listOfTeam.setModel(listModel2);
 
-            //chat.lblUserName.setText(lblUserName.getText());
             for (String member : projectTeam) {
                 listModel2.addElement(member);
             }
@@ -276,10 +274,10 @@ public class User extends javax.swing.JFrame {
     private javax.swing.JButton btnCreateProject;
     private javax.swing.JButton btnGoProject;
     private javax.swing.JButton btnJoinProject;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblMyProjects;
+    private javax.swing.JLabel lblProjectName;
     private javax.swing.JLabel lblSpecialKey;
     public javax.swing.JLabel lblUserName;
     public javax.swing.JList<String> listOfProjects;
