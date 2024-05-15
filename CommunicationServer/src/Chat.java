@@ -21,7 +21,8 @@ import javax.swing.SwingUtilities;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 /**
- *x
+ * fix2
+ *
  * @author merveog
  */
 public class Chat extends javax.swing.JFrame {

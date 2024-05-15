@@ -170,7 +170,7 @@ public class User extends javax.swing.JFrame {
         String projectOwner = lblUserName.getText();
         String projectName = txtProjectName.getText();
 
-        if (!cn.isThereThisProject(projectName)) {
+        if (cn.isThereThisProject(projectName)) {
             JOptionPane.showMessageDialog(rootPane, "This project name already exist!");
 
         } else if (projectName.isEmpty()) {
@@ -191,13 +191,23 @@ public class User extends javax.swing.JFrame {
 
     private void btnJoinProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinProjectActionPerformed
         listOfProjects.setModel(listModel);
+
         boolean isValidKey2 = cn.isThereThisProject("d13231f4-9fda-42c0-aeec-1f9c7479743c");
+        ArrayList<String> userProjects = cn.getUserProjects(lblUserName.getText());
+
         //boolean isValidKey = cn.isThereThisProject(txtProjectKey.getText());
         System.out.println(isValidKey2);
         if (isValidKey2) {
-            cn.updateProjectTeam("d13231f4-9fda-42c0-aeec-1f9c7479743c", lblUserName.getText());
-            listModel.addElement(cn.getProjectName("d13231f4-9fda-42c0-aeec-1f9c7479743c"));
+            if (!userProjects.contains(cn.getProjectName("d13231f4-9fda-42c0-aeec-1f9c7479743c"))) {
+                cn.updateProjectTeam("d13231f4-9fda-42c0-aeec-1f9c7479743c", lblUserName.getText());
+                listModel.addElement(cn.getProjectName("d13231f4-9fda-42c0-aeec-1f9c7479743c"));
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Kullanıcı zaten bu projenin ekibinde.");
+            }
+        } else {
+            System.out.println("Geçersiz proje anahtarı.");
         }
+
 
     }//GEN-LAST:event_btnJoinProjectActionPerformed
 
@@ -209,7 +219,7 @@ public class User extends javax.swing.JFrame {
             String projectKey = cn.getProjectKey(projectName, lblUserName.getText());
             Chat chat = new Chat(lblUserName.getText(), projectName, projectKey);
 
-            ArrayList<String> projectTeam = cn.getProjectTeam(projectName,lblUserName.getText());
+            ArrayList<String> projectTeam = cn.getProjectTeam(projectName, lblUserName.getText());
             chat.listOfTeam.setModel(listModel2);
 
             for (String member : projectTeam) {
