@@ -121,9 +121,21 @@ public class Server {
             // Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
+                int index = clientSockets.indexOf(clientSocket);
+                String projectname = projectNameList.get(index);
+                //if (clientSocket != null && !clientSocket.isClosed()) {
+                // if (index != -1 && index < activeClients.size() && index < projectNameList.size()) {
+                activeClients.remove(index);
+                projectNameList.remove(index);
+                clientSockets.remove(clientSocket);
+                sendActiveClients(projectname);
+                // } else {
+                //  System.out.println("Index out of bounds.");
+                //}
                 clientSocket.close();
+                // }
             } catch (IOException ex) {
-                //   Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
     }
@@ -137,7 +149,7 @@ public class Server {
             }
         }
         //sendProjectGc("2," + messageBuilder.toString(), projectname);
-        sendBroadcastMessage("a," + messageBuilder.toString() + projectName+", ");
+        sendBroadcastMessage("a," + messageBuilder.toString() + projectName + ", ");
     }
 
     public void sendMessage(byte[] msg, Socket clientSocket) {

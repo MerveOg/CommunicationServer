@@ -1,4 +1,6 @@
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,7 +33,6 @@ import javax.swing.SwingUtilities;
  * @author merveog
  */
 public class Chat extends javax.swing.JFrame {
-///aXccccv,,,,,,
 
     private Socket clientSocket;
     private DataInputStream sInput;
@@ -47,7 +48,7 @@ public class Chat extends javax.swing.JFrame {
      */
     public Chat() {
         initComponents();
-        //connectServer();
+        //a connectServer();
     }
 
     public Chat(String userName, String project, String key) {
@@ -56,6 +57,14 @@ public class Chat extends javax.swing.JFrame {
         this.lblKey.setText(key);
         this.lblName.setText(project);
         connectServer();
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                disconnectServer("Disconnected....");
+            }
+        });
+
     }
 
     public void connectServer() {
@@ -75,10 +84,7 @@ public class Chat extends javax.swing.JFrame {
                 sInput = new DataInputStream(clientSocket.getInputStream());
                 sOutput = new DataOutputStream(clientSocket.getOutputStream());
                 SendMessage(msg.getBytes());
-                //activeClients.addElement("1");
-//                SwingUtilities.invokeLater(() -> {
-//                    activeClients.addElement(1);
-//                });
+
                 Thread listenThread = new Thread(() -> Listen());
                 listenThread.start();
 
@@ -146,8 +152,12 @@ public class Chat extends javax.swing.JFrame {
                     }
                     System.out.println("C:" + clients[clients.length - 1]);
                     if (clients[clients.length - 2].equals(lblName.getText())) {
+                        System.out.println("    ----------  ");
                         // İlk eleman "a" olduğu için atlıyoruz ve sadece isimleri ekliyoruz
                         for (int i = 0; i < clients.length - 2; i++) {
+
+                            System.out.println(clients[i]);
+
                             // Her bir ismi activeClients listesine ekliyoruz
                             if (!activeClients.contains(clients[i])) {
                                 activeClients.addElement(clients[i]);
@@ -541,7 +551,7 @@ public class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        disconnectServer("Server connection ended.");
+        //disconnectServer("Server connection ended.");
 //        activeClients.removeElement(lblUserName.getText());
 //        int indexToRemove = activeClients.indexOf(lblUserName.getText());
 //        jList1.remove(indexToRemove);
@@ -585,8 +595,9 @@ public class Chat extends javax.swing.JFrame {
                 }
                 clientSocket.close();
                 System.out.println(disconnectMessage);
-                //  list.addElement(disconnectMessage);
+                //activeClients.removeElement(lblUserName.getText());
 
+                //  list.addElement(disconnectMessage);
             }
         } catch (IOException ex) {
             // Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
