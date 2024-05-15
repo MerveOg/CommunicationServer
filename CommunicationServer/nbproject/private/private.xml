@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/merveog/NetBeansProjects/NetworkProject1/src/Login.java</file>
-            <file>file:/Users/merveog/NetBeansProjects/NetworkProject1/src/SignUp.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/DataConnection.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/Person.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/SignUp.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/Chat.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/User.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/Project.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/Login.java</file>
+            <file>file:/Users/merveog/NetBeansProjects/CommunicationServer/src/Server.java</file>
         </group>
     </open-files>
 </project-private>
