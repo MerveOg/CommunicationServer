@@ -48,7 +48,7 @@ public class Chat extends javax.swing.JFrame {
      */
     public Chat() {
         initComponents();
-        //a connectServer();
+        //Merve connectServer();
     }
 
     public Chat(String userName, String project, String key) {
@@ -153,6 +153,7 @@ public class Chat extends javax.swing.JFrame {
                     System.out.println("C:" + clients[clients.length - 1]);
                     if (clients[clients.length - 2].equals(lblName.getText())) {
                         System.out.println("    ----------  ");
+                        activeClients.removeAllElements();
                         // İlk eleman "a" olduğu için atlıyoruz ve sadece isimleri ekliyoruz
                         for (int i = 0; i < clients.length - 2; i++) {
 

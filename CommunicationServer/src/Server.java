@@ -125,10 +125,18 @@ public class Server {
                 String projectname = projectNameList.get(index);
                 //if (clientSocket != null && !clientSocket.isClosed()) {
                 // if (index != -1 && index < activeClients.size() && index < projectNameList.size()) {
+                System.out.println("HI ACTIVE OL ARTIK KOD0");
+
                 activeClients.remove(index);
                 projectNameList.remove(index);
                 clientSockets.remove(clientSocket);
+                System.out.println("HI ACTIVE OL ARTIK KOD1");
+                // DataInputStream sInput = new DataInputStream(clientSocket.getInputStream());
+                byte[] buffer = new byte[1024];
+                sendMessage(buffer, clientSocket);
+
                 sendActiveClients(projectname);
+                System.out.println("HI ACTIVE OL ARTIK KOD2");
                 // } else {
                 //  System.out.println("Index out of bounds.");
                 //}
@@ -149,6 +157,8 @@ public class Server {
             }
         }
         //sendProjectGc("2," + messageBuilder.toString(), projectname);
+        System.out.println("MB: "+messageBuilder.toString());
+        System.out.println(projectName);
         sendBroadcastMessage("a," + messageBuilder.toString() + projectName + ", ");
     }
 
