@@ -24,18 +24,6 @@ public class SignUp extends javax.swing.JFrame {
         initComponents();
     }
 
-    //Başlangıçta min 1 maksimum 3 tane rakam olmalı. Devamında min 1 maksimum 9 büyük harf içermeli.Sonrasında küçük harf olmalı.
-    public boolean isCorrectPassword(String password) {
-        Matcher matcher;
-
-        matcher = Pattern.compile("^[0-9]{1,3}[A-Z]{1,9}[a-z]{1,8}").matcher(password);
-        if (matcher.matches()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -183,8 +171,6 @@ public class SignUp extends javax.swing.JFrame {
             if (password1.equals(password2)) {
 
                 password = txtPassword.getText();
-                System.out.println(password);
-
                 boolean thereThisUser = connect.isThereThisUser(name, password);
                 if (!thereThisUser) {
                     try {
@@ -193,7 +179,7 @@ public class SignUp extends javax.swing.JFrame {
                         Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    JOptionPane.showMessageDialog(rootPane, "IT IS SUCCESSFULL DEAR User", "GREAT", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(rootPane, "It is successfull dear user", "Successfull Sign Up", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
 
                     Login login = new Login();
@@ -216,7 +202,6 @@ public class SignUp extends javax.swing.JFrame {
 
     private void btnLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogInActionPerformed
         this.dispose();
-
         Login login = new Login();
         login.setVisible(true);
     }//GEN-LAST:event_btnLogInActionPerformed
@@ -230,37 +215,6 @@ public class SignUp extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SignUp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SignUp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SignUp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SignUp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SignUp().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGoLogIn;

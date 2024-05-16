@@ -53,29 +53,7 @@ public class DataConnection {
 
     }
 
-//    public ArrayList<String> getProjectTeam(String projectName) {
-//        ArrayList<String> projectTeam = new ArrayList<>();
-//        String query = "SELECT team FROM Project WHERE name = ?";
-//        try {
-//            preparedStatement = con.prepareStatement(query);
-//            preparedStatement.setString(1, projectName);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            if (resultSet.next()) {
-//                String team = resultSet.getString("team");
-//                // Split team members with ","
-//                String[] teamMembers = team.split(",");
-//                // Add each team member to list. 
-//                for (String member : teamMembers) {
-//                    projectTeam.add(member.trim());
-//                }
-//            } else {
-//                System.out.println("Project " + projectName + " does not exist.");
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return projectTeam;
-//    }
+    //For to show project team on list. 
     public ArrayList<String> getProjectTeam(String projectName, String excludedName) {
         ArrayList<String> projectTeam = new ArrayList<>();
         String query = "SELECT team FROM Project WHERE name = ?";
@@ -103,6 +81,7 @@ public class DataConnection {
         return projectTeam;
     }
 
+    //For to show user projects on list.
     public ArrayList<String> getUserProjects(String username) {
         ArrayList<String> userProjects = new ArrayList<>();
         String query = "SELECT name, team FROM Project";
@@ -132,6 +111,7 @@ public class DataConnection {
         return userProjects;
     }
 
+    //Checled if a user own given project or not. 
     public boolean isProjectOwnedByUser(String projectName, String username) {
         String query = "SELECT projectkey FROM Project WHERE name = ? AND owner = ?";
         try {
@@ -151,6 +131,7 @@ public class DataConnection {
         return false;
     }
 
+    //for to get project key of given projectname and username
     public String getProjectKey(String projectName, String username) {
         String query = "SELECT projectkey FROM Project WHERE name = ? AND owner = ?";
         try {
@@ -159,7 +140,6 @@ public class DataConnection {
             preparedStatement.setString(2, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                // If project owner and user match. 
                 String projectKey = resultSet.getString("projectkey");
                 System.out.println("User " + username + " owns the project " + projectName + " with key " + projectKey);
                 return projectKey;
@@ -171,6 +151,7 @@ public class DataConnection {
         return null; // Project key couldn't find. 
     }
 
+    //To check if user in any team or not. 
     public boolean isUserInAnyTeam(String username) {
         String query = "SELECT name, team FROM Project";
         try {
@@ -179,23 +160,21 @@ public class DataConnection {
             while (resultSet.next()) {
                 String projectName = resultSet.getString("name");
                 String team = resultSet.getString("team");
-                // Takım listesini virgülle ayır
                 String[] teamMembers = team.split(",");
-                // Kullanıcı adını kontrol et
                 for (String member : teamMembers) {
                     if (member.trim().equals(username)) {
                         System.out.println("User " + username + " is in team of project " + projectName);
-                        return true; // Kullanıcı projenin takımında bulundu
+                        return true; // User is in project team. 
                     }
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("User " + username + " is not in any team.");
-        return false; // Kullanıcı hiçbir projenin takımında bulunamadı
+        return false; 
     }
 
+    //When a new client join a project, update team of project. 
     public void updateProjectTeam(String key, String team) {
         String sorgu = "UPDATE Project SET team = CONCAT(team, ?) WHERE projectkey = ?";
         try {
@@ -203,10 +182,9 @@ public class DataConnection {
             preparedStatement.setString(1, team + ",");
             preparedStatement.setString(2, key);
             preparedStatement.executeUpdate();
-            System.out.println("İşlem başarılı");
+
         } catch (SQLException ex) {
             Logger.getLogger(DataConnection.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("İşlem başarısız");
         }
     }
 
@@ -246,16 +224,13 @@ public class DataConnection {
         statement.executeUpdate(sorgu);
     }
 
-//Girilen bilgilere göre doktor bilgilerini doktor database'ine aktaracak metodu yazdım.
     public void addUser(String name, String password) throws SQLException {
         statement = con.createStatement();
 
         String sorgu = "Insert Into UserInfos(username,password)VALUES ('" + name + "','" + password + "')";
         statement.executeUpdate(sorgu);
     }
-
-//doktor giriş yapacakken gireceği email ve passwordu doğru ise (önceden kayıt yapmışsa ve database'de o bilgilere karşılık
-    //doktor bulunuyorsa) giriş yapabilecek.
+    
     public boolean controlLogIn(String username, String password) {
         String sorgu = "Select*From UserInfos where username = ? and password = ?";
         try {
@@ -286,11 +261,11 @@ public class DataConnection {
 
     public boolean isThereThisUser(String username, String password) {
         String sorgu = "Select * from UserInfos where username = ? or password =? ";
+        
         try {
             preparedStatement = con.prepareStatement(sorgu);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
-
             ResultSet executeQuery = preparedStatement.executeQuery();
             return executeQuery.next();
         } catch (SQLException ex) {
@@ -323,9 +298,4 @@ public class DataConnection {
         return statement;
     }
 
-    private long idCounter = 0;
-
-    public synchronized String createID() {
-        return String.valueOf(idCounter++);
-    }
 }

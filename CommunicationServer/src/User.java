@@ -170,14 +170,14 @@ public class User extends javax.swing.JFrame {
         String projectOwner = lblUserName.getText();
         String projectName = txtProjectName.getText();
 
-        if (cn.isThereThisProject(projectName)) {
+        if (cn.isThereThisProjectName(projectName)) {
             JOptionPane.showMessageDialog(rootPane, "This project name already exist!");
 
         } else if (projectName.isEmpty()) {
             JOptionPane.showMessageDialog(rootPane, "Project name can't be empty! Please give a name to project");
 
         } else {
-            listModel.addElement(txtProjectName.getText());
+            listModel.addElement(projectName);
             lblSpecialKey.setText(UUID.randomUUID().toString());
             String projectKey = lblSpecialKey.getText();
             try {
@@ -205,7 +205,7 @@ public class User extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Kullanıcı zaten bu projenin ekibinde.");
             }
         } else {
-            System.out.println("Geçersiz proje anahtarı.");
+            System.out.println("Nonvalid project key.");
         }
 
 
@@ -248,37 +248,6 @@ public class User extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new User().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateProject;

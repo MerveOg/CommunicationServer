@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
-    /**
+    /**Last
      * Creates new form Login
      */
     public Login() {
@@ -132,15 +132,13 @@ public class Login extends javax.swing.JFrame {
         DataConnection connect = new DataConnection();
         String username = txtUserName.getText();
         String password = new String(pfPassword.getPassword());
-        if (txtUserName.getText().isEmpty() || pfPassword.getText().isEmpty()) {
+
+        if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(rootPane, "Fill All Areas", "Warning", JOptionPane.WARNING_MESSAGE);
-
         } else {
-
             boolean isSuccessEnter = connect.controlLogIn(username, password);
             if (isSuccessEnter) {
                 User user = new User();
-                System.out.println("Hellooooo");
                 this.dispose();
                 user.lblUserName.setText(username);
                 ArrayList<String> userProjects = connect.getUserProjects(username);
@@ -148,10 +146,9 @@ public class Login extends javax.swing.JFrame {
                 for (String userProject : userProjects) {
                     user.listModel.addElement(userProject);
                 }
-
                 user.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Could not entered. Please check your informations", "WARNİNG", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Could not entered. Please check your informations", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
 
         }
@@ -159,7 +156,6 @@ public class Login extends javax.swing.JFrame {
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
         this.dispose();
-
         SignUp signUp = new SignUp();
         signUp.setVisible(true);
     }//GEN-LAST:event_btnSignUpActionPerformed

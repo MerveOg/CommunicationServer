@@ -12,21 +12,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class Server {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
     public static boolean isRunning;
-    private DefaultListModel listofMessages = new DefaultListModel();
     private static List<Socket> clientSockets = new ArrayList<>();
-    private List<Socket> clientSocketsForMessage = new ArrayList<>();
     private List<String> projectNameList = new ArrayList<>();
     private List<String> activeClients = new ArrayList<>();
 
@@ -46,9 +40,9 @@ public class Server {
             listenThread.start();
 
         } catch (NumberFormatException e) {
-
+            System.out.println(e.getMessage());
         } catch (IOException e) {
-
+            System.out.println(e.getMessage());
         }
     }
 
@@ -58,11 +52,12 @@ public class Server {
                 if (!isRunning) {
                     break;
                 }
+
                 clientSocket = serverSocket.accept();
                 System.out.println("Client accepted: " + clientSocket);
-
                 Thread clientThread = new Thread(() -> handleClient(clientSocket));
                 clientThread.start();
+
             } catch (IOException ex) {
                 if (!isRunning) {
                     break;
@@ -73,10 +68,7 @@ public class Server {
 
     private void handleClient(Socket clientSocket) {
         try {
-            //clientSockets.clear();
             clientSockets.add(clientSocket);
-
-            clientSocketsForMessage.add(clientSocket);
 
             DataInputStream sInput = new DataInputStream(clientSocket.getInputStream());
             byte[] buffer = new byte[1024];
@@ -86,12 +78,11 @@ public class Server {
             String user = parts[0];
             String project = parts[1];
 
+            //Adding user and projectname infos to these lists so i can update my active users list in Chat class.
             activeClients.add(user);
             projectNameList.add(project);
 
-            //
             System.out.println(message);
-            listofMessages.addElement(message);
 
             sendMessage(buffer, clientSocket);
             sendActiveClients(project);
@@ -104,9 +95,7 @@ public class Server {
                     break;
                 }
                 message = new String(buffer, 0, bytesRead);
-                System.out.println(message);
-                listofMessages.addElement(message);
-                clientSocketsForMessage.add(clientSocket);
+                //System.out.println(message);
                 sendBroadcastMessage(message);
 
             }
@@ -116,6 +105,7 @@ public class Server {
                 int index = clientSockets.indexOf(clientSocket);
                 String projectname = projectNameList.get(index);
 
+                //When clients close their page, i have to update active clients list. So i removed this client from lists.
                 activeClients.remove(index);
                 projectNameList.remove(index);
                 clientSockets.remove(clientSocket);
@@ -140,8 +130,6 @@ public class Server {
                 messageBuilder.append(activeClients.get(i)).append(",");
             }
         }
-        System.out.println("MB: " + messageBuilder.toString());
-        System.out.println(projectName);
         sendBroadcastMessage("a," + messageBuilder.toString() + projectName + ", ");
     }
 
@@ -158,30 +146,29 @@ public class Server {
         try {
             isRunning = false;
             serverSocket.close();
-            System.out.println("Server stopped");
+            System.out.println("Server closed");
 
         } catch (IOException ex) {
-            //    Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Server didn't close");
         }
     }
-
 
     public void sendBroadcastMessage(String msg) {
         StringBuilder formattedMsgBuilder = new StringBuilder();
         formattedMsgBuilder.append(msg);
         formattedMsgBuilder.append(")");
 
-        // Mesajda ')' işaretine kadar olan kısmı alın
+        // take the message till ) part. 
         int indexOfClosingBracket = msg.indexOf(")");
         if (indexOfClosingBracket != -1) {
             String partialMsg = msg.substring(0, indexOfClosingBracket);
             formattedMsgBuilder.append(partialMsg);
         }
 
-        // Byte dizisine çevirin
+        // turn into byte array
         byte[] msgBytes = formattedMsgBuilder.toString().getBytes();
 
-        // Tüm bağlı istemcilere mesajı gönderin
+        // Send message to every client
         for (Socket clientSocket : clientSockets) {
             sendMessage(msgBytes, clientSocket);
         }
