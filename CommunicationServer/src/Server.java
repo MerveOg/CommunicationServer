@@ -53,7 +53,6 @@ public class Server {
     }
 
     public void Listen() {
-        //clientSockets.clear();
         while (isRunning) {
             try {
                 if (!isRunning) {
@@ -62,17 +61,12 @@ public class Server {
                 clientSocket = serverSocket.accept();
                 System.out.println("Client accepted: " + clientSocket);
 
-//                activeClients.add(clientSocket);
-//                for (Socket clientSocket1 : clientSockets) {
-//                    sendBroadcastMessage("A" + clientSocket1);
-//                }
                 Thread clientThread = new Thread(() -> handleClient(clientSocket));
                 clientThread.start();
             } catch (IOException ex) {
                 if (!isRunning) {
                     break;
                 }
-                //Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -99,7 +93,6 @@ public class Server {
             System.out.println(message);
             listofMessages.addElement(message);
 
-            // buffer = "Server connected to client".getBytes();
             sendMessage(buffer, clientSocket);
             sendActiveClients(project);
             while (isRunning) {
@@ -172,63 +165,8 @@ public class Server {
         }
     }
 
-    public void selectedPerson(String projectName, String userName, String message) {
-        // İlgili mesajı oluştur
-//        String fullMessage = userName + "," + projectName + "," + message;
-//
-//        // İlgili projeye ve kullanıcıya gönderilecek soketleri bul
-//        List<Socket> socketsToSend = new ArrayList<>();
-//        for (int i = 0; i < usernameList.size(); i++) {
-//            if (usernameList.get(i).equals(userName)) {
-//                // Kullanıcı adı eşleşirse, aynı indeksteki soketi al
-//                Socket userSocket = clientSockets.get(i);
-//                socketsToSend.add(userSocket);
-//                break; // İlgili kullanıcıyı bulduğumuzda döngüyü sonlandırabiliriz
-//            }
-//        }
-//
-//        // İlgili projeye gönder
-//        for (int i = 0; i < projectNameList.size(); i++) {
-//            if (projectNameList.get(i).equals(projectName)) {
-//                // Proje adı eşleşirse, aynı indeksteki soketi al
-//                Socket projectSocket = clientSockets.get(i);
-//                socketsToSend.add(projectSocket);
-//                break; // İlgili projeyi bulduğumuzda döngüyü sonlandırabiliriz
-//            }
-//        }
-//
-//        // Oluşturulan mesajı ilgili soketlere gönder
-//        byte[] msgBytes = fullMessage.getBytes();
-//        for (Socket socket : socketsToSend) {
-//            sendMessage(msgBytes, socket);
-//        }
-    }
 
-    public void sendProjectGc(String projectName, String message) {
-
-    }
-
-//    public void sendBroadcastMessage(String msg) {
-//        //String msg = "Server: " + txtASendM.getText();
-//        byte[] msgBytes = msg.getBytes();
-//        for (Socket clientSocket : clientSockets) {
-//            sendMessage(msgBytes, clientSocket);
-//        }
-//    }
-//    public void sendBroadcastMessage(String msg) {
-//        // Mesajı belirlenen formatla başlatın ve bitirin
-//        String formattedMsg = "(" + msg + ")";
-//
-//        // Byte dizisine çevirin
-//        byte[] msgBytes = formattedMsg.getBytes();
-//
-//        // Tüm bağlı istemcilere mesajı gönderin
-//        for (Socket clientSocket : clientSockets) {
-//            sendMessage(msgBytes, clientSocket);
-//        }
-//    }
     public void sendBroadcastMessage(String msg) {
-        // Mesajı belirlenen formatla başlatın ve bitirin
         StringBuilder formattedMsgBuilder = new StringBuilder();
         formattedMsgBuilder.append(msg);
         formattedMsgBuilder.append(")");

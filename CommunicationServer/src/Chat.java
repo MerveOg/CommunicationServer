@@ -1,4 +1,7 @@
 
+import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,13 +18,15 @@ import java.util.Base64;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 /**
- * fix2
+ * file
  *
  * @author merveog
  */
@@ -57,7 +62,40 @@ public class Chat extends javax.swing.JFrame {
                 disconnectServer("Disconnected....");
             }
         });
+        txtAGc.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Check if it's a single-click event
+                if (e.getClickCount() == 1) {
+                    // Get the selected value
+                    Object selectedValue = txtAGc.getSelectedValue();
+                    if (selectedValue != null && selectedValue instanceof String) {
+                        // Check if the selected value represents a file
+                        String selectedFileName = (String) selectedValue;
+                        if (selectedFileName.contains(".ipynb") || selectedFileName.contains(".jpg") || selectedFileName.contains(".pdf") || selectedFileName.contains(".png")) {
+                            System.out.println("Selected file name: " + selectedFileName);
+                            // If it's a file, open it
 
+                            openFile(selectedFileName);
+                        } else {
+                            // If it's not a file, handle it as a regular message
+                            // You can implement this part based on your requirements
+                            // For example, display the message or perform any other action
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void openFile(String fileName) {
+        try {
+            // Open the file using default system application
+            Desktop.getDesktop().open(new File(fileName));
+        } catch (IOException ex) {
+            System.out.println("Error opening file: " + ex.getMessage());
+        }
     }
 
     public void connectServer() {
@@ -373,6 +411,11 @@ public class Chat extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        txtAGc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtAGcMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(txtAGc);
 
         txtAPrivChat.setModel(new javax.swing.AbstractListModel<String>() {
@@ -531,14 +574,19 @@ public class Chat extends javax.swing.JFrame {
                 fis.close();
 
                 String fileName = fileToSend.getName();
-                String fileContentBase64 = new String(fileContent, "UTF-8");
+                String fileContentBase64 = Base64.getEncoder().encodeToString(fileContent);
                 String message = "File:" + fileName + ":" + fileContentBase64;
 
                 SendMessage(message.getBytes());
             } catch (IOException ex) {
                 System.out.println("Dosya okunurken bir hata oluştu: " + ex.getMessage());
             }
+
         }    }//GEN-LAST:event_btnSendFileGcActionPerformed
+
+    private void txtAGcMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtAGcMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAGcMouseClicked
 
     private void disconnectServer(String disconnectMessage) {
         try {
